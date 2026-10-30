@@ -1,0 +1,201 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday Anaya ❤️</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+  min-height:100vh;
+  background:linear-gradient(135deg,#170d30,#54204f,#b43c75);
+  color:white;
+  font-family:Georgia,serif;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  overflow:hidden;
+}
+
+.screen{
+  display:none;
+  width:100%;
+  padding:25px;
+  animation:fade .8s ease;
+}
+.screen.active{display:block}
+
+h1{
+  font-size:clamp(36px,9vw,65px);
+  margin-bottom:20px;
+  text-shadow:0 0 20px #ff83c2;
+}
+p{font-size:19px;line-height:1.7;color:#ffe2ef}
+
+.heart{
+  font-size:80px;
+  animation:beat 1s infinite;
+}
+
+.rope{
+  width:4px;height:100px;
+  background:#ffd4e8;
+  margin:35px auto;
+  position:relative;
+}
+.rope:after{
+  content:"🎀";
+  position:absolute;
+  bottom:-25px;left:-18px;
+  font-size:35px;
+}
+
+.cake{font-size:95px;margin:25px}
+
+button{
+  background:linear-gradient(45deg,#ff5d9e,#ff91bf);
+  color:white;border:0;
+  border-radius:30px;
+  padding:15px 30px;
+  font-size:17px;
+  margin-top:25px;
+  cursor:pointer;
+  box-shadow:0 5px 25px #ff76ae66;
+}
+
+.music-control{
+  position:fixed;
+  bottom:20px;
+  right:15px;
+  background:#ffffff22;
+  padding:10px 15px;
+  border-radius:25px;
+  font-size:14px;
+}
+
+.float{
+  position:fixed;
+  bottom:-50px;
+  animation:up 7s linear forwards;
+  pointer-events:none;
+}
+
+@keyframes beat{
+  50%{transform:scale(1.2)}
+}
+@keyframes fade{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes up{
+  to{transform:translateY(-110vh) rotate(360deg);opacity:0}
+}
+</style>
+</head>
+
+<body>
+
+<!-- MUSIC FILE -->
+<audio id="birthdaySong" preload="auto">
+  <source src="song.mp3" type="audio/mpeg">
+</audio>
+
+<div class="screen active" id="start">
+  <div class="heart">❤️</div>
+  <h1>Hey Anaya!</h1>
+  <p>Something special is waiting for you...</p>
+  <div class="rope"></div>
+  <p>Pull the ribbon to continue 🎀</p>
+  <button onclick="next('wish')">Pull & Release</button>
+</div>
+
+<div class="screen" id="wish">
+  <h1>Make a Wish ✨</h1>
+  <div class="cake">🎂</div>
+  <p>Close your eyes and make a beautiful wish, Anaya!</p>
+  <button onclick="next('birthday')">I Made a Wish ❤️</button>
+</div>
+
+<div class="screen" id="birthday">
+  <div class="heart">💖</div>
+  <h1>Happy Birthday<br>Anaya!</h1>
+
+  <p>
+    May your life always be filled with happiness,<br>
+    love, laughter and beautiful memories.<br>
+    Keep shining and keep smiling! 🌸
+  </p>
+
+  <div class="cake">🎂🎁🎈</div>
+
+  <button onclick="replay()">Replay Again ↻</button>
+</div>
+
+<button class="music-control" id="musicBtn"
+onclick="toggleMusic()" style="display:none">
+  🔊 Music ON
+</button>
+
+<script>
+const song = document.getElementById("birthdaySong");
+const musicBtn = document.getElementById("musicBtn");
+
+function next(id){
+  document.querySelectorAll(".screen").forEach(s=>{
+    s.classList.remove("active");
+  });
+
+  document.getElementById(id).classList.add("active");
+
+  if(id === "birthday"){
+    song.currentTime = 0;
+    song.play().then(()=>{
+      musicBtn.style.display="block";
+      musicBtn.innerText="🔊 Music ON";
+    }).catch(()=>{
+      musicBtn.style.display="block";
+      musicBtn.innerText="▶ Play Music";
+    });
+
+    confetti();
+  }
+}
+
+function replay(){
+  song.pause();
+  song.currentTime=0;
+  next("birthday");
+}
+
+function toggleMusic(){
+  if(song.paused){
+    song.play();
+    musicBtn.innerText="🔊 Music ON";
+  }else{
+    song.pause();
+    musicBtn.innerText="🔇 Music OFF";
+  }
+}
+
+function confetti(){
+  for(let i=0;i<45;i++){
+    let e=document.createElement("div");
+    e.className="float";
+    e.textContent=["❤️","💖","✨","🌸","🎉","🎈"][
+      Math.floor(Math.random()*6)
+    ];
+    e.style.left=Math.random()*100+"%";
+    e.style.animationDelay=Math.random()*3+"s";
+    e.style.fontSize=(20+Math.random()*25)+"px";
+    document.body.appendChild(e);
+    setTimeout(()=>e.remove(),8000);
+  }
+}
+</script>
+
+</body>
+</html>
